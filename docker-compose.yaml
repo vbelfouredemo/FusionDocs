@@ -1,0 +1,71 @@
+version: "3.9"
+
+services:
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+    tty: true
+    privileged: true
+
+  chroma:
+    image: chromadb/chroma
+    ports:
+      - "8000:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - CHROMA_SERVER_HOST=0.0.0.0
+    volumes:
+      - chroma_data:/chroma
+    restart: unless-stopped
+
+  langserve:
+    build:
+      context: ./langserve
+    ports:
+      - "8080:8080"
+    depends_on:
+      - chroma
+      - ollama
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+
+  ui:
+    build:
+      context: ./ui
+    ports:
+      - "8501:8501"
+    depends_on:
+      - langserve
+
+  ingest:
+    build:
+      context: ./ingest
+    volumes:
+      - ./data:/data
+      - ./docs:/docs
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+    depends_on:
+      - chroma
+      - ollama
+    entrypoint: ["python", "ingest.py"]
+
+  upload:
+    build:
+      context: ./upload_api
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./data:/data
+
+volumes:
+  ollama:
+  chroma_data:
