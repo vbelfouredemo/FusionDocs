@@ -5,6 +5,7 @@ from langchain_chroma import Chroma  # Updated import
 from langchain_ollama import OllamaEmbeddings  # Updated import
 from chromadb import Client
 from chromadb.config import Settings  # Reintroduce Settings import
+from langchain.llms import OpenAI  # Import an LLM
 import os
 import requests
 
@@ -35,7 +36,11 @@ vectordb = Chroma(
     client=chroma_client
 )
 
+# Initialize an LLM (e.g., OpenAI GPT model)
+llm = OpenAI(model="text-davinci-003", temperature=0)  # Adjust model and parameters as needed
+
 qa = RetrievalQA.from_chain_type(
+    llm=llm,  # Pass the LLM instance
     retriever=vectordb.as_retriever(),
     chain_type="stuff"
 )
