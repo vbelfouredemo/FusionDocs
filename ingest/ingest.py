@@ -1,6 +1,6 @@
 import os
 import json
-from langchain.embeddings import OllamaEmbeddings
+from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.schema import Document
 import chromadb
