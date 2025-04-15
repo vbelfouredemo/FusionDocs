@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from langserve import add_routes
 from langchain.chains import RetrievalQA
-from langchain_community.vectorstores import Chroma  # Updated import
-from langchain_community.embeddings import OllamaEmbeddings  # Updated import
+from langchain_chroma import Chroma  # Updated import
+from langchain_ollama import OllamaEmbeddings  # Updated import
 from chromadb.config import Settings
 import os
 
