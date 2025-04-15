@@ -10,18 +10,6 @@ app = FastAPI()
 
 embedding = OllamaEmbeddings(model="mistral", base_url=os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434"))
 
-print("Debugging Chroma Settings:")
-print(Settings(
-    chroma_api_impl="local",  # Current implementation
-    chroma_server_host=os.environ.get("CHROMA_HOST", "localhost"),
-    chroma_server_http_port=int(os.environ.get("CHROMA_PORT", 8000))
-))
-
-print("Final Chroma Settings being passed:", Settings(
-    chroma_api_impl="local",  # Switch back to 'local' implementation
-    persist_directory="/app/chroma_data"  # Set a valid persist directory
-))
-
 vectordb = Chroma(
     collection_name="my_docs",
     embedding_function=embedding,
