@@ -3,6 +3,7 @@ from langserve import add_routes
 from langchain.chains import RetrievalQA
 from langchain_chroma import Chroma  # Updated import
 from langchain_ollama import OllamaEmbeddings  # Updated import
+from chromadb import Client
 from chromadb.config import Settings
 import os
 import requests
@@ -20,14 +21,19 @@ try:
 except Exception as e:
     print("Failed to connect to Chroma server:", e)
 
+# Initialize the Chroma REST client
+client_settings = Settings(
+    chroma_api_impl="rest",
+    chroma_server_host=chroma_host,
+    chroma_server_http_port=int(chroma_port)
+)
+
+chroma_client = Client(settings=client_settings)
+
 vectordb = Chroma(
     collection_name="my_docs",
     embedding_function=embedding,
-    client_settings=Settings(
-        chroma_api_impl="rest",  # Switch to 'rest' implementation
-        chroma_server_host=chroma_host,  # Use the Chroma container hostname
-        chroma_server_http_port=int(chroma_port)  # Use the Chroma container port
-    )
+    client=chroma_client
 )
 
 qa = RetrievalQA.from_chain_type(
