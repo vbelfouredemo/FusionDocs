@@ -18,6 +18,7 @@ services:
     environment:
       - IS_PERSISTENT=TRUE
       - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_API_IMPL=rest  # Explicitly set the API implementation to 'rest'
     volumes:
       - chroma_data:/chroma
     restart: unless-stopped
