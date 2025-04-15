@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from langserve import add_routes
+from . import add_routes
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OllamaEmbeddings
