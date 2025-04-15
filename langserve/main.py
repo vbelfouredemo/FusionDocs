@@ -5,6 +5,7 @@ from langchain_chroma import Chroma  # Updated import
 from langchain_ollama import OllamaEmbeddings  # Updated import
 from chromadb import Client
 from chromadb.config import Settings
+from pydantic_settings import BaseSettings  # Updated import for BaseSettings
 import os
 import requests
 
