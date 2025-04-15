@@ -3,6 +3,7 @@ from langserve import add_routes
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OllamaEmbeddings
+from chromadb.config import Settings
 import os
 
 app = FastAPI()
@@ -12,11 +13,11 @@ embedding = OllamaEmbeddings(model="mistral", base_url=os.environ.get("OLLAMA_BA
 vectordb = Chroma(
     collection_name="my_docs",
     embedding_function=embedding,
-    client_settings={
-        "chroma_api_impl": "rest",
-        "chroma_server_host": os.environ.get("CHROMA_HOST", "localhost"),
-        "chroma_server_http_port": int(os.environ.get("CHROMA_PORT", 8000))
-    }
+    client_settings=Settings(
+        chroma_api_impl="rest",
+        chroma_server_host=os.environ.get("CHROMA_HOST", "localhost"),
+        chroma_server_http_port=int(os.environ.get("CHROMA_PORT", 8000))
+    )
 )
 
 qa = RetrievalQA.from_chain_type(
