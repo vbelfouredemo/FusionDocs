@@ -17,13 +17,17 @@ print(Settings(
     chroma_server_http_port=int(os.environ.get("CHROMA_PORT", 8000))
 ))
 
+print("Final Chroma Settings being passed:", Settings(
+    chroma_api_impl="local",  # Switch back to 'local' implementation
+    persist_directory="/app/chroma_data"  # Set a valid persist directory
+))
+
 vectordb = Chroma(
     collection_name="my_docs",
     embedding_function=embedding,
     client_settings=Settings(
-        chroma_api_impl="rest",  # Switch to 'rest' implementation
-        chroma_server_host=os.environ.get("CHROMA_HOST", "localhost"),
-        chroma_server_http_port=int(os.environ.get("CHROMA_PORT", 8000))
+        chroma_api_impl="local",  # Switch back to 'local' implementation
+        persist_directory="/app/chroma_data"  # Set a valid persist directory
     )
 )
 
